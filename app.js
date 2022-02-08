@@ -46,7 +46,7 @@ app.use(log('dev'))
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = 13;
-rule.minute = 0;
+rule.minute = 30;
 
 let book_id = 0;
 
