@@ -45,7 +45,7 @@ app.use(log('dev'))
 
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 17;
+rule.hour = 12;
 rule.minute = 0;
 
 let book_id = 0;
@@ -55,7 +55,7 @@ const job = schedule.scheduleJob(rule, async function(){
 
     const info = await Token.find();
 
-    book_id = book_id + 1;;
+    book_id = book_id + 1;
 
     for (let pushToken of info) {
     
@@ -64,7 +64,7 @@ const job = schedule.scheduleJob(rule, async function(){
         continue;
       }
     
-      let new_book = book.find(element => element.id === book_id)
+      let new_book = book.find(element => element.id === 1)
     
       messages.push({
         to: pushToken.token,
