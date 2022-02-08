@@ -14,6 +14,7 @@ const User = require('./model/User');
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const Auth = require('./middleware/auth')
+const log = require('morgan')
 
 
 
@@ -40,11 +41,12 @@ db.once('open', () => {
 
 
 app.use(express.json())
+app.use(log('dev'))
 
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 2;
-rule.minute = 23;
+rule.hour = 17;
+rule.minute = 0;
 
 let book_id = 0;
 
