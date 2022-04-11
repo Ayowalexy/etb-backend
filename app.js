@@ -168,17 +168,65 @@ app.post('/set-push-token', async(req, res) => {
 
 app.post('/sign-up', async (req, res) => {
   try {
-        const { username, password } = req.body;
+        const { email, password, loggedIn, started,expires, subscribed } = req.body;
+        const user =  await User.findOne({email: email});
+        if(user){
+            const obj = {
+              email: user.email,
+              loggedIn: user.loggedIn,
+              subscriptionStatus: {
+                  started: user.started,
+                  expires: user.expires,
+                  subscribed: user.subscribed
+            }
+          }
+            return res.json({"message": "Ok", "response": obj})
+        }
+
+        
         bcrypt.hash(password, 12).then(async function(hash) {
         const newUser = new User({email, password: hash})
-        await newUser.save();
 
-        res.status(200).json({"message": "Ok", "response": newUser})
+        await newUser.save();
+        const obj = {
+          email: newUser.email,
+          loggedIn: newUser.loggedIn,
+          subscriptionStatus: {
+              started: newUser.started,
+              expires: newUser.expires,
+              subscribed: newUser.subscribed
+        }
+      }
+
+        res.status(200).json({"message": "Ok", "response": obj})
     });
   } catch (e){
     console.log(e)
   }
 
+})
+
+app.post('/update', async(req, res) => {
+  try {
+      const { email } = req.body;
+      const user = await User.findOneAndUpdate({email: email}, {...req.body})
+      const update = await User.findOne({email: email})
+      const obj = {
+        email: update.email,
+        loggedIn: update.loggedIn,
+        subscriptionStatus: {
+            started: update.started,
+            expires: update.expires,
+            subscribed: update.subscribed
+      }
+    }
+
+    console.log(obj)
+    return res.status(200).json({"message": "Ok", "response": obj})
+
+  } catch(e){
+    console.log(e)
+  }
 })
 
 app.post('/login', async( req, res) => {
