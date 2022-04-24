@@ -209,19 +209,38 @@ app.post('/sign-up', async (req, res) => {
 app.post('/update', async(req, res) => {
   try {
       const { email } = req.body;
-      const user = await User.findOneAndUpdate({email: email}, {...req.body})
-      const update = await User.findOne({email: email})
-      const obj = {
-        email: update.email,
-        loggedIn: update.loggedIn,
-        subscriptionStatus: {
-            started: update.started,
-            expires: update.expires,
-            subscribed: update.subscribed
-      }
-    }
+      const availableUser = await User.findOne({email: email});
+      if(availableUser){
+          const user = await User.findOneAndUpdate({email: email}, {...req.body})
+          const update = await User.findOne({email: email})
+          const obj = {
+            email: update.email,
+            loggedIn: update.loggedIn,
+            subscriptionStatus: {
+                started: update.started,
+                expires: update.expires,
+                subscribed: update.subscribed
+          }
+        }
+        return res.status(200).json({"message": "Ok", "response": obj})
+      } else {
+        const user = new User({...req.body});
+        await user.save();
+        const obj = {
+            email: user.email,
+            loggedIn: user.loggedIn,
+            subscriptionStatus: {
+                started: user.started,
+                expires: user.expires,
+                subscribed: user.subscribed
+          }
+        }
+        return res.status(200).json({"message": "Ok", "response": obj})
 
-    console.log(obj)
+
+      }
+      
+
     return res.status(200).json({"message": "Ok", "response": obj})
 
   } catch(e){
