@@ -174,6 +174,7 @@ app.post('/sign-up', async (req, res) => {
             const obj = {
               email: user.email,
               loggedIn: user.loggedIn,
+              newUser: false,
               subscriptionStatus: {
                   started: user.started,
                   expires: user.expires,
@@ -191,6 +192,7 @@ app.post('/sign-up', async (req, res) => {
         const obj = {
           email: newUser.email,
           loggedIn: newUser.loggedIn,
+          newUser: true,
           subscriptionStatus: {
               started: newUser.started,
               expires: newUser.expires,
@@ -215,6 +217,7 @@ app.post('/update', async(req, res) => {
           const update = await User.findOne({email: email})
           const obj = {
             email: update.email,
+            newUser: false,
             loggedIn: update.loggedIn,
             subscriptionStatus: {
                 started: update.started,
@@ -229,6 +232,7 @@ app.post('/update', async(req, res) => {
         const obj = {
             email: user.email,
             loggedIn: user.loggedIn,
+            newUser: true,
             subscriptionStatus: {
                 started: user.started,
                 expires: user.expires,
